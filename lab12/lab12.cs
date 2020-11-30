@@ -1,6 +1,44 @@
 ﻿using System;
 
 namespace lab12_app {
+	interface bonus_expansion {
+		void expand_bonus_num();
+	}
+	abstract class payment : ICloneable {
+		protected int is_succeed;
+		public payment(int a) {
+			is_succeed = a;
+		}
+		public object Clone() {
+            return new payment_cash(is_succeed);
+        }
+		public int get_access() {
+            return is_succeed;
+        }
+		public abstract int is_accessible();
+	}
+	class payment_cash : payment {
+		public payment_cash(int a) : base(a) {
+		}
+		public override string ToString() {
+            string s = "";
+            s += "Access code: " + Convert.ToString(is_succeed) + "\n";
+            return s;
+        }
+		public void change_val(int a) {
+			is_succeed = a;
+		}
+		public override int is_accessible() {
+			return is_succeed * 1;
+		}
+	}
+	class payment_card : payment {
+		public payment_card(int a) : base(a) {
+		}
+		public override int is_accessible() {
+			return is_succeed * 0;
+		}
+	}
 	class special {
 		protected int bonus_num; //число бонусов
 		protected int continuation; //длительность в днях
@@ -34,6 +72,11 @@ namespace lab12_app {
 			Console.WriteLine("\nDecreasing number of bonuses");
 			this.bonus_num -= a;
 			Console.Write($"Number of bonuses decreased on {0}\n", a);
+		}
+		public void expand_bonus_num() {
+			Console.WriteLine("\nIncreasing number of bonuses");
+			this.bonus_num += 2;
+			Console.WriteLine("Number of bonuses increased on 2");
 		}
 		public void set_default() { //установка значений по умолчанию
 			this.bonus_num = 5;
@@ -96,9 +139,11 @@ namespace lab12_app {
             return s;
         }
 	}
-	class book_store {
+	class book_store : ICloneable {
 		special[,] spec_offer1 = new special[10, 10]; //бонусы двумерный массив
 		special[] spec_offer = new special[10]; //бонусы одномерный массив
+		public special spec_offer2;
+		public payment_cash cash;
 		int n = 0; //размерности массивов
 		int m = 0;
 		String title; //название
@@ -148,7 +193,24 @@ namespace lab12_app {
 			get { return popularity; }
 			set { popularity = value; }
 		}
-	
+		
+		public object Clone() {
+			book_store book = new book_store(title, author, genre, price, num_stock, popularity, spec_offer2, cash.get_access());
+            cash = (payment_cash)cash.Clone();
+            return book;
+        }
+		
+		public book_store(String str1, String str2, String str3, int a, int b, int c, special spec_offer, int d) { //конструктор с параметрами для одномерного массива
+			this.title = str1;
+			this.author = str2;
+			this.genre = str3;
+			this.price = a;
+			this.num_stock = b;
+			this.popularity = c;
+			this.spec_offer2 = spec_offer;
+			this.cash = new payment_cash(d);
+		}
+		
 		public book_store(String str1, String str2, String str3, int a, int b, int c, int d, special[] spec_offer) { //конструктор с параметрами для одномерного массива
 			this.title = str1;
 			this.author = str2;
@@ -188,6 +250,11 @@ namespace lab12_app {
 			popularity = c;
 			n = d;
 		}
+		public override string ToString() {
+            string s = "";
+            s += "\nYour book\nTitle: " + Convert.ToString(title) + "\nAuthor: " + Convert.ToString(author) + "\nGenre: " + Convert.ToString(genre) + "\nPrice: " + Convert.ToString(price) + "\nNumber in stock: " + Convert.ToString(num_stock) + "\n" + spec_offer2 + cash;
+            return s;
+        }
 		public void output() { //вывод для одномерного массива
 			Console.WriteLine("\nYour book");
 			Console.Write($"\nTitle: {title}\nAuthor: {author}\nGenre: {genre}\nPrice: {price}\nNumber in stock: {num_stock}\nPopularity: {popularity}\n");
@@ -263,6 +330,8 @@ namespace lab12_app {
 			String x1, y1, z1;
 			String s1, s2, s3; //строки
 			
+			int res1, res2;
+			
 			limited_special lim_offer1 = new limited_special(5, 6, 2);
 			special sp_offer1 = new special(8, 4);
 			Console.WriteLine("\nWorking with a derivative class");
@@ -279,6 +348,52 @@ namespace lab12_app {
 			Console.WriteLine("\nlim_offer1\n");
 			Console.WriteLine(lim_offer1);
 			
+			Console.WriteLine("Working with an abstract class\n");
+			payment_cash cash1 = new payment_cash(1);
+			payment_card card1 = new payment_card(2);
+			res1 = cash1.is_accessible();
+			if(res1 > 0)
+				Console.WriteLine("Cash pay for cash1 is accessible\n");
+			else
+				Console.WriteLine("Cash pay for cash1 is not accessible\n");
+			res2 = card1.is_accessible();
+			if(res2 > 0)
+				Console.WriteLine("Card pay for card1 is accessible\n");
+			else
+				Console.WriteLine("Card pay for card1 is not accessible\n");
+			
+			Console.WriteLine("Working with an interface (bonus num expansion)");
+			sp_offer1.expand_bonus_num();
+			Console.WriteLine("\nsp_offer1\n");
+			Console.WriteLine(sp_offer1);
+			lim_offer1.expand_bonus_num();
+			Console.WriteLine("\nlim_offer1\n");
+			Console.WriteLine(lim_offer1);
+			
+			s1 = "qqq";
+			s2 = "aaa";
+			s3 = "zzz";
+			special spec_offer6 = new special(3, 4);
+			book_store book6 = new book_store(s1, s2, s3, 100, 10, 15, spec_offer6, 2);
+			s1 = "www";
+			s2 = "sss";
+			s3 = "xxx";
+			special spec_offer7 = new special(5, 6);
+			book_store book7 = new book_store(s1, s2, s3, 200, 20, 25, spec_offer7, 1);
+			Console.WriteLine("\nShallow cloning (spec_offer.bonus_num) and deep cloning (cash.is_succeed)\n");
+			Console.WriteLine("book6");
+			Console.WriteLine(book6);
+			Console.WriteLine("book7");
+			Console.WriteLine(book7);
+			book6 = (book_store)book7.Clone();
+			Console.WriteLine("book6");
+			Console.WriteLine(book6);
+			book7.spec_offer2.change_bonus_num(10);
+			book7.cash.change_val(3);
+			Console.WriteLine("book6");
+			Console.WriteLine(book6);
+			Console.WriteLine("book7");
+			Console.WriteLine(book7);
 			
 			/*Console.WriteLine("Input information about the 1 book\n"); //ввод информации о книге
 			Console.WriteLine("Input number of specials: ");
