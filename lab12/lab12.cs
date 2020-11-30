@@ -2,11 +2,15 @@
 
 namespace lab12_app {
 	class special {
-		public int bonus_num; //число бонусов
-		public int continuation; //длительность в днях
+		protected int bonus_num; //число бонусов
+		protected int continuation; //длительность в днях
 		public special() { //конструктор без параметров
 			this.bonus_num = 5;
 			this.continuation = 1;
+		}
+		public special(int a, int b) {
+			this.bonus_num = a;
+			this.continuation = b;
 		}
 		public special(int a) { //конструктор с параметром для создания массива
 			this.bonus_num = a;
@@ -26,9 +30,14 @@ namespace lab12_app {
 			this.bonus_num = bonus_num - 2;
 			Console.WriteLine("Number of bonuses decreased on 2");
 		}
+		public void reduce_bonus_on_num(int a) {
+			Console.WriteLine("\nDecreasing number of bonuses");
+			this.bonus_num -= a;
+			Console.Write($"Number of bonuses decreased on {0}\n", a);
+		}
 		public void set_default() { //установка значений по умолчанию
 			this.bonus_num = 5;
-			this.continuation = 1;
+			this.continuation = 2;
 		}
 		public static special operator + (special spec_offer, int a) { //перегрузка + постфиксная
 			special spec_offer1;
@@ -46,6 +55,46 @@ namespace lab12_app {
 			++ spec_offer.bonus_num;
 			return spec_offer;
 		}
+		public override string ToString() {
+            string s = "";
+            s += "Number of bonuses: " + Convert.ToString(bonus_num) + "\nContinuation: " + Convert.ToString(continuation) + "\n";
+            return s;
+        }
+
+	}
+	class limited_special : special {
+		int times_per_year;
+		public limited_special(int a, int b, int c) : base(a, b) {
+			times_per_year = c;
+		}
+		public void output() {
+			Console.WriteLine($"\nNumber of bonuses:: {bonus_num}\nContinuation: {continuation}\nTimes per year:: {times_per_year}");
+		}
+		public void change_times_per_year(int a) {
+			this.times_per_year = a;
+		}
+		public void reduce_bonus_on_num(int a, int b)
+		{
+			Console.WriteLine("\nDecreasing number of bonuses and times per year");
+			this.bonus_num -= a;
+			this.times_per_year -= b;
+			Console.WriteLine($"Number of bonuses decreased on {a}, times per year decreased on {b}");
+		}
+		public void expand_bonus_num()
+		{
+			Console.WriteLine("\nIncreasing number of bonuses");
+			this.bonus_num += 4;
+			Console.WriteLine("Number of bonuses increased on 4");
+		}
+		public void set_default() {
+			base.set_default();
+			this.times_per_year = 4;
+		}
+		public override string ToString() {
+            string s = "";
+            s += "Number of bonuses: " + Convert.ToString(bonus_num) + "\nContinuation: " + Convert.ToString(continuation) + "\nTimes per year: " + Convert.ToString(times_per_year) + "\n";
+            return s;
+        }
 	}
 	class book_store {
 		special[,] spec_offer1 = new special[10, 10]; //бонусы двумерный массив
@@ -213,7 +262,25 @@ namespace lab12_app {
 			int x2, y2;
 			String x1, y1, z1;
 			String s1, s2, s3; //строки
-			Console.WriteLine("Input information about the 1 book\n"); //ввод информации о книге
+			
+			limited_special lim_offer1 = new limited_special(5, 6, 2);
+			special sp_offer1 = new special(8, 4);
+			Console.WriteLine("\nWorking with a derivative class");
+			Console.WriteLine("\nlim_offer1");
+			Console.WriteLine(lim_offer1);
+			Console.WriteLine("\nsp_offer1\n");
+			Console.WriteLine(sp_offer1);
+			Console.WriteLine("\nOverload without basic method (reducing bonus num)");
+			lim_offer1.reduce_bonus_on_num(2, 1);
+			Console.WriteLine("\nlim_offer1\n");
+			Console.WriteLine(lim_offer1);
+			Console.WriteLine("\nOverload with basic method (setting default val)");
+			lim_offer1.set_default();
+			Console.WriteLine("\nlim_offer1\n");
+			Console.WriteLine(lim_offer1);
+			
+			
+			/*Console.WriteLine("Input information about the 1 book\n"); //ввод информации о книге
 			Console.WriteLine("Input number of specials: ");
 			n = Convert.ToInt32(Console.ReadLine());
 			special[] spec_offer1 = new special[10]; //одномерные массивы
@@ -431,7 +498,7 @@ namespace lab12_app {
 			for(int i = 0; i < 2; i ++)
 			{
 				spec_offer5[i].output();
-			}
+			}*/
 		}
 	}
 }
