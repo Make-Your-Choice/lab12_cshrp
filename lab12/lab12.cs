@@ -1,52 +1,52 @@
 ﻿using System;
 
 namespace lab12_app {
-	interface bonus_expansion {
-		void expand_bonus_num();
+	interface bonus_expansion { //интерфейс
+		void expand_bonus_num(); //метод интерфейса
 	}
-	abstract class payment : ICloneable {
+	abstract class payment : ICloneable { //абстрактный класс оплата с поддержкой клонирования
 		protected int is_succeed;
 		public payment(int a) {
 			is_succeed = a;
 		}
-		public object Clone() {
+		public object Clone() { //клонирование
             return new payment_cash(is_succeed);
         }
-		public int get_access() {
+		public int get_access() { //геттер
             return is_succeed;
         }
-		public abstract int is_accessible();
+		public abstract int is_accessible(); //абстрактная функция проверки успешности операции оплаты
 	}
-	class payment_cash : payment {
-		public payment_cash(int a) : base(a) {
+	class payment_cash : payment { //наследник абстрактного класса
+		public payment_cash(int a) : base(a) { //вызов конструктора базового класса
 		}
-		public override string ToString() {
+		public override string ToString() { //перегрузка toString
             string s = "";
             s += "Access code: " + Convert.ToString(is_succeed) + "\n";
             return s;
         }
-		public void change_val(int a) {
+		public void change_val(int a) { //изменение кода доступа
 			is_succeed = a;
 		}
-		public override int is_accessible() {
+		public override int is_accessible() { //перегрузка абстрактной функции
 			return is_succeed * 1;
 		}
 	}
-	class payment_card : payment {
-		public payment_card(int a) : base(a) {
+	class payment_card : payment { //наследник абстрактного класса
+		public payment_card(int a) : base(a) { //вызов конструктора базового класса
 		}
-		public override int is_accessible() {
+		public override int is_accessible() { //перегрузка абстрактной функции
 			return is_succeed * 0;
 		}
 	}
-	class special {
+	class special { //бонусы
 		protected int bonus_num; //число бонусов
 		protected int continuation; //длительность в днях
 		public special() { //конструктор без параметров
 			this.bonus_num = 5;
 			this.continuation = 1;
 		}
-		public special(int a, int b) {
+		public special(int a, int b) { //конструктор с параметрами
 			this.bonus_num = a;
 			this.continuation = b;
 		}
@@ -68,12 +68,12 @@ namespace lab12_app {
 			this.bonus_num = bonus_num - 2;
 			Console.WriteLine("Number of bonuses decreased on 2");
 		}
-		public void reduce_bonus_on_num(int a) {
+		public void reduce_bonus_on_num(int a) { //сокращение числа бонусов на число
 			Console.WriteLine("\nDecreasing number of bonuses");
 			this.bonus_num -= a;
 			Console.Write($"Number of bonuses decreased on {0}\n", a);
 		}
-		public void expand_bonus_num() {
+		public void expand_bonus_num() { //метод интерфейса
 			Console.WriteLine("\nIncreasing number of bonuses");
 			this.bonus_num += 2;
 			Console.WriteLine("Number of bonuses increased on 2");
@@ -98,52 +98,52 @@ namespace lab12_app {
 			++ spec_offer.bonus_num;
 			return spec_offer;
 		}
-		public override string ToString() {
+		public override string ToString() { //перегрузка toString
             string s = "";
             s += "Number of bonuses: " + Convert.ToString(bonus_num) + "\nContinuation: " + Convert.ToString(continuation) + "\n";
             return s;
         }
 
 	}
-	class limited_special : special {
-		int times_per_year;
-		public limited_special(int a, int b, int c) : base(a, b) {
+	class limited_special : special { //наследование от класса бонусов - класс ограниченные бонусы с поддержкой интерфейса
+		int times_per_year; //периодичность в год
+		public limited_special(int a, int b, int c) : base(a, b) { //конструктор с вызовом конструктора базового (супер) класса
 			times_per_year = c;
 		}
 		public void output() {
 			Console.WriteLine($"\nNumber of bonuses:: {bonus_num}\nContinuation: {continuation}\nTimes per year:: {times_per_year}");
 		}
-		public void change_times_per_year(int a) {
+		public void change_times_per_year(int a) { //изменение периодичности
 			this.times_per_year = a;
 		}
-		public void reduce_bonus_on_num(int a, int b)
+		public void reduce_bonus_on_num(int a, int b) //перегрузка базового метода сокращения числа бонусов на заданное число
 		{
 			Console.WriteLine("\nDecreasing number of bonuses and times per year");
 			this.bonus_num -= a;
 			this.times_per_year -= b;
 			Console.WriteLine($"Number of bonuses decreased on {a}, times per year decreased on {b}");
 		}
-		public void expand_bonus_num()
+		public void expand_bonus_num() //метод интерфейса и перегрузка базового метода увеличения числа бонусов
 		{
 			Console.WriteLine("\nIncreasing number of bonuses");
 			this.bonus_num += 4;
 			Console.WriteLine("Number of bonuses increased on 4");
 		}
-		public void set_default() {
+		public void set_default() { //перегрузка базового метода установления значений по усолчанию с вызовом метода базового класса
 			base.set_default();
 			this.times_per_year = 4;
 		}
-		public override string ToString() {
+		public override string ToString() { //перегрузка toString
             string s = "";
             s += "Number of bonuses: " + Convert.ToString(bonus_num) + "\nContinuation: " + Convert.ToString(continuation) + "\nTimes per year: " + Convert.ToString(times_per_year) + "\n";
             return s;
         }
 	}
-	class book_store : ICloneable {
+	class book_store : ICloneable { //поддержка клонирования
 		special[,] spec_offer1 = new special[10, 10]; //бонусы двумерный массив
 		special[] spec_offer = new special[10]; //бонусы одномерный массив
-		public special spec_offer2;
-		public payment_cash cash;
+		public special spec_offer2; //бонусы
+		public payment_cash cash; //оплата наличными
 		int n = 0; //размерности массивов
 		int m = 0;
 		String title; //название
@@ -194,13 +194,13 @@ namespace lab12_app {
 			set { popularity = value; }
 		}
 		
-		public object Clone() {
+		public object Clone() { //клонирование
 			book_store book = new book_store(title, author, genre, price, num_stock, popularity, spec_offer2, cash.get_access());
             cash = (payment_cash)cash.Clone();
             return book;
         }
 		
-		public book_store(String str1, String str2, String str3, int a, int b, int c, special spec_offer, int d) { //конструктор с параметрами для одномерного массива
+		public book_store(String str1, String str2, String str3, int a, int b, int c, special spec_offer, int d) { //конструктор с параметрами
 			this.title = str1;
 			this.author = str2;
 			this.genre = str3;
@@ -250,7 +250,7 @@ namespace lab12_app {
 			popularity = c;
 			n = d;
 		}
-		public override string ToString() {
+		public override string ToString() { //перегрузка toString
             string s = "";
             s += "\nYour book\nTitle: " + Convert.ToString(title) + "\nAuthor: " + Convert.ToString(author) + "\nGenre: " + Convert.ToString(genre) + "\nPrice: " + Convert.ToString(price) + "\nNumber in stock: " + Convert.ToString(num_stock) + "\n" + spec_offer2 + cash;
             return s;
@@ -339,11 +339,11 @@ namespace lab12_app {
 			Console.WriteLine(lim_offer1);
 			Console.WriteLine("\nsp_offer1\n");
 			Console.WriteLine(sp_offer1);
-			Console.WriteLine("\nOverload without basic method (reducing bonus num)");
+			Console.WriteLine("\nOverload without basic method (reducing bonus num)"); //перегрузка без вызова базового метода
 			lim_offer1.reduce_bonus_on_num(2, 1);
 			Console.WriteLine("\nlim_offer1\n");
 			Console.WriteLine(lim_offer1);
-			Console.WriteLine("\nOverload with basic method (setting default val)");
+			Console.WriteLine("\nOverload with basic method (setting default val)"); //перегрузка с вызовом базового метода
 			lim_offer1.set_default();
 			Console.WriteLine("\nlim_offer1\n");
 			Console.WriteLine(lim_offer1);
@@ -351,22 +351,22 @@ namespace lab12_app {
 			Console.WriteLine("Working with an abstract class\n");
 			payment_cash cash1 = new payment_cash(1);
 			payment_card card1 = new payment_card(2);
-			res1 = cash1.is_accessible();
+			res1 = cash1.is_accessible(); //вызов перегруженной абстрактной функции
 			if(res1 > 0)
 				Console.WriteLine("Cash pay for cash1 is accessible\n");
 			else
 				Console.WriteLine("Cash pay for cash1 is not accessible\n");
-			res2 = card1.is_accessible();
+			res2 = card1.is_accessible(); //вызов перегруженной абстрактной функции
 			if(res2 > 0)
 				Console.WriteLine("Card pay for card1 is accessible\n");
 			else
 				Console.WriteLine("Card pay for card1 is not accessible\n");
 			
 			Console.WriteLine("Working with an interface (bonus num expansion)");
-			sp_offer1.expand_bonus_num();
+			sp_offer1.expand_bonus_num(); //вызов метода интерфейса
 			Console.WriteLine("\nsp_offer1\n");
 			Console.WriteLine(sp_offer1);
-			lim_offer1.expand_bonus_num();
+			lim_offer1.expand_bonus_num(); //вызов метода интерфейса
 			Console.WriteLine("\nlim_offer1\n");
 			Console.WriteLine(lim_offer1);
 			
@@ -388,232 +388,12 @@ namespace lab12_app {
 			book6 = (book_store)book7.Clone();
 			Console.WriteLine("book6");
 			Console.WriteLine(book6);
-			book7.spec_offer2.change_bonus_num(10);
-			book7.cash.change_val(3);
+			book7.spec_offer2.change_bonus_num(10); //мелкое клонирование spec_offer (для book6 bonus_num = 10)
+			book7.cash.change_val(3); //глубокое клонирование cash (для book6 is_succeed = 1)
 			Console.WriteLine("book6");
 			Console.WriteLine(book6);
 			Console.WriteLine("book7");
 			Console.WriteLine(book7);
-			
-			/*Console.WriteLine("Input information about the 1 book\n"); //ввод информации о книге
-			Console.WriteLine("Input number of specials: ");
-			n = Convert.ToInt32(Console.ReadLine());
-			special[] spec_offer1 = new special[10]; //одномерные массивы
-			special[] spec_offer2 = new special[10];
-			for(int i = 0; i < n; i++)
-			{
-				spec_offer1[i] = new special();
-				spec_offer2[i] = new special();
-			}
-			Console.WriteLine("\nInput title: ");
-			s1 = Console.ReadLine();
-			Console.WriteLine("Input author: ");
-			s2 = Console.ReadLine();
-			Console.WriteLine("Input genre: ");
-			s3 = Console.ReadLine();
-			int r;
-			r = 0;
-			while(r == 0) //проверка корректности ввода цены
-			{
-				Console.WriteLine("Input price: ");
-				r = 1;
-				x1 = Console.ReadLine();
-				try {
-					if(!Char.IsDigit(x1,0)) //если цена - цифра
-						throw e1 = new Exception("Incorrect input\n");
-					x = Convert.ToInt32(x1);
-				}
-				catch(Exception e1) {
-					Console.WriteLine("Incorrect value\n"); //сообщение об ошибке
-					r = 0;
-				}
-				if (r == 1)
-					continue;
-			}
-			r = 0;
-			while(r == 0) //проверка корректности ввода количества на складе
-			{
-				Console.WriteLine("Input number in stock: ");
-				r = 1;
-				y1 = Console.ReadLine();
-				try {
-					if(!Char.IsDigit(y1,0)) //если количество на складе - цифра
-						throw e1 = new Exception("Incorrect input\n");
-					y = Convert.ToInt32(y1);
-				}
-				catch(Exception e1) {
-					Console.WriteLine("Incorrect value\n"); //сообщение об ошибке
-					r = 0;
-				}
-				if (r == 1)
-					continue;
-			}
-			r = 0;
-			while(r == 0) //проверка корректности ввода популярности
-			{
-				Console.WriteLine("Input popularity: ");
-				r = 1;
-				z1 = Console.ReadLine();
-				try {
-					if(!Char.IsDigit(z1,0)) //если популярность - цифра
-						throw e1 = new Exception("Incorrect input\n");
-					z = Convert.ToInt32(z1);
-				}
-				catch(Exception e1) {
-					Console.WriteLine("Incorrect value\n"); //сообщение об ошибке
-					r = 0;
-				}
-				if (r == 1)
-					continue;
-			}
-			book_store book1 = new book_store(s1, s2, s3, x, y, z, n, spec_offer1);
-			book1.output();
-			book_store book2 = new book_store(spec_offer2);
-			book2.Title = "www"; //установка значений с помощью сеттера
-			book2.Author = "sss";
-			book2.Genre = "xxx";
-			book2.Price = 200;
-			book2.Num_stock = 20;
-			book2.Popularity = 25;
-			Console.WriteLine("\nSecond book (setter used)");
-			book2.output();
-			Console.WriteLine("\nNumber in stock of 1 and 2: {0}", book1.summarize(book2)); //сложение количетва двух книг
-			String book_genre = book1.Genre; //получение значения геттером
-			Console.WriteLine("First book genre is {0}, str length of genre is {1}", book_genre, book_genre.Length); //вычисление длины строки жанр
-			Console.WriteLine("\nFirst book");
-			book1.output(); //вывод
-			book1.sell(); //продажа
-			book1.output();
-			book1.price_rise(); //повышение цены
-			book1.output();
-			book1.rearrange(); //перестановка
-			book1.output();
-			book1.archivate(); //отправка на склад
-			book1.output();
-			book1.reduce_bonus(); //уменьшение количества бонусов для одномерного массива
-			book1.output();
-			book1.predictable_profit(out profit); //подсчет ожидаемой прибыли через out
-			Console.WriteLine("\nPredictable profit: {0}", profit);
-			book1.predictable_popularity(ref popularity); //подсчет ожидаемой популярности через ref
-			Console.WriteLine("Predictable popularity: {0}", popularity);
-			Console.WriteLine("First book title length is {0}",book_store.title_len(book1)); //вывод значения длины строки названия
-			book_store.space_left = 50; //установка значения оставшегося места
-			Console.WriteLine("Space left in the store {0}",book_store.space_left);
-			Console.WriteLine("Input information about the 3 book\n"); //ввод информации о книге
-			Console.WriteLine("Input number of specials (n and m): ");
-			n = Convert.ToInt32(Console.ReadLine());
-			m = Convert.ToInt32(Console.ReadLine());
-			special [,] spec_offer3 = new special[10, 10]; //двумерный массив
-			for(int i = 0; i < n; i++) //ввод двумерного массива
-			{
-				for(int j = 0; j < m; j++)
-				{
-					spec_offer3[i, j] = new special(); //вызов конструктора без параметров
-					Console.WriteLine("\nInput number of bonuses for [{0}][{1}] special: ", i + 1, j + 1);
-					x2 = Convert.ToInt32(Console.ReadLine());
-					spec_offer3[i, j].change_bonus_num(x2);
-					Console.WriteLine("Input continuation for [{0}][{1}] special: ", i + 1, j + 1);
-					y2 = Convert.ToInt32(Console.ReadLine());
-					spec_offer3[i, j].change_continuation(y2);
-				}
-			}
-			Console.WriteLine("\nInput title: ");
-			s1 = Console.ReadLine();
-			Console.WriteLine("Input author: ");
-			s2 = Console.ReadLine();
-			Console.WriteLine("Input genre: ");
-			s3 = Console.ReadLine();
-			r = 0;
-			while(r == 0) //проверка корректности ввода цены
-			{
-				Console.WriteLine("Input price: ");
-				r = 1;
-				x1 = Console.ReadLine();
-				try {
-					if(!Char.IsDigit(x1,0)) //если цена - цифра
-						throw e1 = new Exception("Incorrect input\n");
-					x = Convert.ToInt32(x1);
-				}
-				catch(Exception e1) {
-					Console.WriteLine("Incorrect value\n"); //сообщение об ошибке
-					r = 0;
-				}
-				if (r == 1)
-					continue;
-			}
-			r = 0;
-			while(r == 0) //проверка корректности ввода количества на складе
-			{
-				Console.WriteLine("Input number in stock: ");
-				r = 1;
-				y1 = Console.ReadLine();
-				try {
-					if(!Char.IsDigit(y1,0)) //если количество на складе - цифра
-						throw e1 = new Exception("Incorrect input\n");
-					y = Convert.ToInt32(y1);
-				}
-				catch(Exception e1) {
-					Console.WriteLine("Incorrect value\n"); //сообщение об ошибке
-					r = 0;
-				}
-				if (r == 1)
-					continue;
-			}
-			r = 0;
-			while(r == 0) //проверка корректности ввода популярности
-			{
-				Console.WriteLine("Input popularity: ");
-				r = 1;
-				z1 = Console.ReadLine();
-				try {
-					if(!Char.IsDigit(z1,0)) //если популярность - цифра
-						throw e1 = new Exception("Incorrect input\n");
-					z = Convert.ToInt32(z1);
-				}
-				catch(Exception e1) {
-					Console.WriteLine("Incorrect value\n"); //сообщение об ошибке
-					r = 0;
-				}
-				if (r == 1)
-					continue;
-			}
-			book_store book3 = new book_store(s1, s2, s3, x, y, z, n, m, spec_offer3);
-			book3.output1();
-			book3.sell(); //продажа
-			book3.output1();
-			book3.price_rise(); //повышение цены
-			book3.output1();
-			book3.rearrange(); //перестановка
-			book3.output1();
-			book3.archivate(); //отправка на склад
-			book3.output1();
-			book3.reduce_bonus1(); //уменьшение количества бонусов для двумерного массива
-			book3.output1();
-			special[] spec_offer0 = new special[1];
-			special[] spec_offer4 = new special[1];
-			spec_offer0[0] = new special();
-			spec_offer4[0] = new special();
-			Console.WriteLine($"\nDefault value of special offer = {spec_offer0[0].bonus_num}");
-			spec_offer4[0] = spec_offer0[0] + 5; //перегрузка + постфиксная
-			Console.WriteLine($"\nSpecial offer + 5 = {spec_offer4[0].bonus_num}");
-			spec_offer4[0] = 10 + spec_offer0[0]; //перегрузка + префиксная
-			Console.WriteLine($"10 + Special offer = {spec_offer4[0].bonus_num}");
-			spec_offer4[0] = spec_offer0[0] ++; //перегрузка ++ постфиксная
-			Console.WriteLine($"Special offer ++ = {spec_offer4[0].bonus_num}");
-			spec_offer4[0].set_default();
-			spec_offer4[0] = ++ spec_offer0[0]; //перегрузка ++ префиксная
-			Console.WriteLine($"++ Special offer = {spec_offer4[0].bonus_num}");
-			Console.WriteLine("\nMassive using constructor with a single parameter");
-			special[] spec_offer5 = new special[2];
-			for(int i = 0; i < 2; i ++)
-			{
-				spec_offer5[i] = new special(10); //вызов конструктора с одним параметром для создания массива
-			}
-			Console.WriteLine("\nSpecial offers\n");
-			for(int i = 0; i < 2; i ++)
-			{
-				spec_offer5[i].output();
-			}*/
 		}
 	}
 }
